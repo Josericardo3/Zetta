@@ -1,0 +1,70 @@
+doctype html
+head
+  //
+    - Basic Page Needs
+    ==================================================
+  meta(charset='utf-8')
+  title Arqui
+  //
+    Mobile Specific Metas
+    ==================================================
+  meta(name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1')
+  //
+    CSS
+    ==================================================
+  link(rel='stylesheet' href='/static/css/layout.css')
+  link(rel='stylesheet' href='/static/css/media-queries.css')
+  link(rel='shortcut icon' href='favicon.png')
+body
+  div(id="app")
+    section#intro
+      header.row
+      // Header End
+      #main.row
+        .twelve.columns
+          h1 Revisar cambios en las casas para cobro de impuesto municipal
+          p El cobro del impuesto municipal 
+          h5 COBRO MUNICIPAL
+          #counter.cf
+            span
+              | {{ totalPay }} 
+              em Total a pagar
+            span
+              | {{ infoHouse }}
+              em Info de la casa
+            span
+              | {{ location }}
+              em Ubicacion
+      // main end
+    // end intro section
+script(src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js")
+script(src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js")
+script.
+  const app = new Vue({
+    el: '#app',
+    data: {
+      totalPay: 0,
+      infoHouse: 0,
+      location: 0,
+      socketArduino: null
+    },
+    mounted() {
+      this.socketArduino = io.connect('http://localhost:3000/arduino',{
+        forceNew: true
+      })
+      this.sockets()
+    },
+    methods: {
+      sockets() {
+        this.socketArduino.on('cTotalPay', data => {
+          this.totalPay = data
+        })
+        this.socketArduino.on('cInfoHouse', data => {
+          this.infoHouse = data
+        })
+        this.socketArduino.on('cLocation', data => {
+          this.location = data
+        })
+      }
+    }
+  })
