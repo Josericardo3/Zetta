@@ -49,7 +49,7 @@ script.
       socketArduino: null
     },
     mounted() {
-      this.socketArduino = io.connect('http://localhost:3000/arduino',{
+      this.socketArduino = io.connect('https://zettaapp.azurewebsites.net',{
         forceNew: true
       })
       this.sockets()
